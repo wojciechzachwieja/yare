@@ -24,7 +24,6 @@
 
 package com.sabre.oss.yare.serializer.json.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import java.util.Objects;
@@ -32,14 +31,10 @@ import java.util.Objects;
 public class Parameter {
     private String name;
     @JsonUnwrapped
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Value value;
     @JsonUnwrapped
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Values values;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Function function;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Operator operator;
 
     public String getName() {
@@ -118,12 +113,13 @@ public class Parameter {
         Parameter parameter = (Parameter) o;
         return Objects.equals(name, parameter.name) &&
                 Objects.equals(value, parameter.value) &&
+                Objects.equals(values, parameter.values) &&
                 Objects.equals(function, parameter.function) &&
                 Objects.equals(operator, parameter.operator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, function, operator);
+        return Objects.hash(name, value, values, function, operator);
     }
 }

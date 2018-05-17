@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Objects;
 
-public class Value implements Expression {
+public class Value {
     private String value;
     @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = StringTypeFilter.class)
     private String type = String.class.getName();

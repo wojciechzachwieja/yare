@@ -1,0 +1,120 @@
+/*
+ * MIT License
+ *
+ * Copyright 2018 Sabre GLBL Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+{
+  "attributes": [
+    {
+      "name": "attribute-name-1",
+      "value": "attribute-value-1",
+      "type": "attribute-type-1"
+    },
+    {
+      "name": "attribute-name-2",
+      "value": "attribute-value-2",
+      "type": "attribute-type-2"
+    },
+    {
+      "name": "attribute-name-3",
+      "value": "attribute-value-3",
+      "type": "attribute-type-3"
+    }
+  ],
+  "facts": [
+    {
+      "name": "fact-name-1",
+      "type": "fact-type-1"
+    },
+    {
+      "name": "fact-name-2",
+      "type": "fact-type-2"
+    }
+  ],
+  "predicate": {
+    "operator": {
+      "operator-type-1": [
+        {
+          "operator": {
+            "operator-type-2": [
+              {
+                "value": "value-value-1"
+              },
+              {
+                "value": "value-value-2",
+                "type": "value-type-2"
+              }
+            ]
+          }
+        },
+        {
+          "operator": {
+            "operator-type-3": [
+              {
+                "function": {
+                  "name": "function-name",
+                  "parameters": [
+                    {
+                      "name": "parameter-name-1",
+                      "value": "value-value-3"
+                    },
+                    {
+                      "name": "parameter-name-2",
+                      "values": [
+                        {
+                          "value": "value-value-4",
+                          "type": "value-type-4"
+                        }
+                      ],
+                      "type": "values-type"
+                    }
+                  ]
+                }
+              },
+              {
+                "operator": {
+                  "operator-type-3": [
+                    {
+                      "value": "value-value-5"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "actions": [
+    {
+      "name": "action-name",
+      "parameters": [
+        {
+          "name": "parameter-name-3",
+          "values": [],
+          "type": "values-type-3"
+        }
+      ]
+    }
+  ]
+}

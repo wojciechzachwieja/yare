@@ -28,10 +28,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sabre.oss.yare.serializer.json.RuleToJsonConverter;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
@@ -50,7 +50,7 @@ class OperatorSerializationTest {
         Operator operator = new Operator()
                 .withType("test-type")
                 .withExpressions(Collections.singletonList(
-                        new Value().withValue("test-value")
+                        new Expression().withValue(new Value().withValue("test-value"))
                 ));
 
         String serialized = objectMapper.writeValueAsString(operator);
@@ -59,20 +59,28 @@ class OperatorSerializationTest {
                 "{" +
                 "  \"test-type\": [" +
                 "    {" +
-                "      \"value\": \"test-value\"" +
+                "       \"value\": \"test-value\"" +
                 "    }" +
                 "  ]" +
                 "}");
     }
 
     @Test
-    @Disabled
     void shouldProperlyDeserializeEqualOperator() throws IOException {
         String serialized = "" +
                 "{" +
                 "  \"test-type\": [" +
                 "    {" +
-                "      \"value\": \"test-value\"" +
+                "       \"value\": \"test-value\"" +
+                "    }," +
+                "    {" +
+                "       \"values\": [" +
+                "       {" +
+                "           \"value\": \"test-value-1\"," +
+                "           \"type\": \"test-type-1\"" +
+                "       }" +
+                "       ]," +
+                "       \"type\": \"test-type\"" +
                 "    }" +
                 "  ]" +
                 "}";
@@ -81,9 +89,14 @@ class OperatorSerializationTest {
 
         Operator expected = new Operator()
                 .withType("test-type")
-                .withExpressions(Collections.singletonList(
-                        new Value().withValue("test-value")
+                .withExpressions(Arrays.asList(
+                        new Expression()
+                                .withValue(new Value().withValue("test-value").withType("java.lang.String"))
+                                .withValues(new Values().withType(null)),
+                        new Expression()
+                                .withValue(new Value().withType("test-type"))
+                                .withValues(new Values().withValues(Collections.singletonList(new Value().withValue("test-value-1").withType("test-type-1"))).withType("test-type"))
                 ));
-        assertThat(deserialized).isEqualTo(expected);
+        assertThat(deserialized).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }

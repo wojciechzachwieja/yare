@@ -30,10 +30,12 @@ import com.sabre.oss.yare.serializer.json.RuleToJsonConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ParameterSerializationTest {
     private ObjectMapper objectMapper;
@@ -90,16 +92,20 @@ class ParameterSerializationTest {
         assertThatJson(serialized).isEqualTo("" +
                 "{" +
                 "  \"name\": \"test-name\"," +
-                "  \"values\": [{" +
+                "  \"values\": [" +
+                "    {" +
                 "      \"value\": \"test-value-1\"," +
                 "      \"type\": \"test-type-1\"" +
-                "  }, {" +
+                "    }," +
+                "    {" +
                 "      \"value\": \"test-value-2\"" +
-                "  }, {" +
+                "    }," +
+                "    {" +
                 "      \"value\": \"java.lang.String\"," +
                 "      \"type\": \"test-type-3\"" +
-                "  }]," +
-                "  \"type\" : \"test-type\"" +
+                "    }" +
+                "  ]," +
+                "  \"type\": \"test-type\"" +
                 "}");
     }
 
@@ -127,11 +133,121 @@ class ParameterSerializationTest {
                 "  \"name\": \"test-name-1\"," +
                 "  \"function\": {" +
                 "    \"name\": \"test-name-2\"," +
-                "    \"parameters\": [{" +
-                "      \"name\": \"test-name-3\"," +
-                "      \"value\": \"test-value\"" +
-                "    }]" +
+                "    \"parameters\": [" +
+                "      {" +
+                "        \"name\": \"test-name-3\"," +
+                "        \"value\": \"test-value\"" +
+                "      }" +
+                "    ]" +
                 "  }" +
                 "}");
+    }
+
+    @Test
+    void shouldProperlyDeserializeValueParameter() throws IOException {
+        String serialized = "" +
+                "{" +
+                "  \"name\": \"test-name\"," +
+                "  \"value\": \"test-value\"," +
+                "  \"type\": \"test-type\"" +
+                "}";
+
+        Parameter deserialized = objectMapper.readValue(serialized, Parameter.class);
+
+        Parameter expected = new Parameter()
+                .withName("test-name")
+                .withValue(new Value().withValue("test-value").withType("test-type"))
+                .withValues(new Values().withType("test-type"));
+        assertThat(deserialized).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldProperlyDeserializeValueParameterWhenTypeIsString() throws IOException {
+        String serialized = "" +
+                "{" +
+                "  \"name\": \"test-name\"," +
+                "  \"value\": \"test-value\"" +
+                "}";
+
+        Parameter deserialized = objectMapper.readValue(serialized, Parameter.class);
+
+        Parameter expected = new Parameter()
+                .withName("test-name")
+                .withValue(new Value().withValue("test-value").withType("java.lang.String"))
+                .withValues(new Values().withType(null));
+        assertThatJson(deserialized).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldProperlyDeserializeValuesParameter() throws IOException {
+        String serialized = "" +
+                "{" +
+                "  \"name\": \"test-name\"," +
+                "  \"values\": [" +
+                "    {" +
+                "      \"value\": \"test-value-1\"," +
+                "      \"type\": \"test-type-1\"" +
+                "    }," +
+                "    {" +
+                "      \"value\": \"test-value-2\"" +
+                "    }," +
+                "    {" +
+                "      \"value\": \"java.lang.String\"," +
+                "      \"type\": \"test-type-3\"" +
+                "    }" +
+                "  ]," +
+                "  \"type\": \"test-type\"" +
+                "}";
+
+        Parameter deserialized = objectMapper.readValue(serialized, Parameter.class);
+
+        Parameter expected = new Parameter()
+                .withName("test-name")
+                .withValues(new Values()
+                        .withValues(Arrays.asList(
+                                new Value().withValue("test-value-1").withType("test-type-1"),
+                                new Value().withValue("test-value-2").withType("java.lang.String"),
+                                new Value().withValue("java.lang.String").withType("test-type-3")))
+                        .withType("test-type"))
+                .withValue(new Value().withType("test-type"));
+        assertThat(deserialized).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldProperlyDeserializeFunctionParameter() throws IOException {
+        String serialized = "" +
+                "{" +
+                "  \"name\": \"test-name-1\"," +
+                "  \"function\": {" +
+                "    \"name\": \"test-name-2\"," +
+                "    \"parameters\": [" +
+                "      {" +
+                "        \"name\": \"test-name-3\"," +
+                "        \"value\": \"test-value\"" +
+                "      }" +
+                "    ]" +
+                "  }" +
+                "}";
+
+        Parameter deserialized = objectMapper.readValue(serialized, Parameter.class);
+
+        Parameter expected = new Parameter()
+                .withName("test-name-1")
+                .withValue(new Value())
+                .withValues(new Values())
+                .withFunction(new Function()
+                        .withName("test-name-2")
+                        .withParameters(Collections.singletonList(
+                                new Parameter()
+                                        .withName("test-name-3")
+                                        .withValue(new Value()
+                                                .withValue("test-value")
+                                                .withType("java.lang.String")
+                                        )
+                                        .withValues(new Values().withType(null))
+                                )
+                        )
+                );
+        assertThat(deserialized).isEqualTo(expected);
     }
 }

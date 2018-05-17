@@ -24,5 +24,87 @@
 
 package com.sabre.oss.yare.serializer.json.model;
 
-public interface Expression {
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import java.util.Objects;
+
+public class Expression {
+    @JsonUnwrapped
+    private Value value;
+    @JsonUnwrapped
+    private Values values;
+    private Function function;
+    private Operator operator;
+
+    public Value getValue() {
+        return value;
+    }
+
+    public void setValue(Value value) {
+        this.value = value;
+    }
+
+    public Expression withValue(Value value) {
+        this.value = value;
+        return this;
+    }
+
+    public Values getValues() {
+        return values;
+    }
+
+    public void setValues(Values values) {
+        this.values = values;
+    }
+
+    public Expression withValues(Values values) {
+        this.values = values;
+        return this;
+    }
+
+    public Function getFunction() {
+        return function;
+    }
+
+    public void setFunction(Function function) {
+        this.function = function;
+    }
+
+    public Expression withFunction(Function function) {
+        this.function = function;
+        return this;
+    }
+
+    public Operator getOperator() {
+        return operator;
+    }
+
+    public void setOperator(Operator operator) {
+        this.operator = operator;
+    }
+
+    public Expression withOperator(Operator operator) {
+        this.operator = operator;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Expression that = (Expression) o;
+        return Objects.equals(value, that.value) &&
+                Objects.equals(values, that.values) &&
+                Objects.equals(function, that.function) &&
+                Objects.equals(operator, that.operator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, values, function, operator);
+    }
 }

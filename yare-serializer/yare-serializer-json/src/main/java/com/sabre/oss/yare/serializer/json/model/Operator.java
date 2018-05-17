@@ -34,7 +34,7 @@ import java.util.Objects;
 
 @JsonSerialize(using = OperatorSerializer.class)
 @JsonDeserialize(using = OperatorDeserializer.class)
-public class Operator implements Expression {
+public class Operator {
     private String type;
     private List<Expression> expressions;
 
